@@ -1,0 +1,60 @@
+---
+export interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Mauricio Cari Leal - Software Developer Portfolio" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=1" />
+		<link rel="icon" type="image/x-icon" href="/favicon.ico?v=1" />
+		<link rel="shortcut icon" href="/favicon.ico?v=1" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+	</head>
+	<body class="antialiased">
+		<slot />
+	</body>
+</html>
+
+<style is:global>
+	body {
+		font-family: 'Inter', sans-serif;
+		background-color: #0f172a; /* slate-900 */
+		color: #cbd5e1; /* slate-300 */
+	}
+	.gradient-text {
+		background: linear-gradient(to right, #38bdf8, #818cf8); /* sky-400 to indigo-400 */
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+	.glass-card {
+		background: rgba(30, 41, 59, 0.5); /* slate-800 with opacity */
+		backdrop-filter: blur(10px);
+		border: 1px solid rgba(51, 65, 85, 0.5); /* slate-700 with opacity */
+	}
+	.timeline-item h3 {
+		position: relative;
+	}
+	.timeline-item h3::before {
+		content: '';
+		position: absolute;
+		left: -2.25rem;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		background-color: #38bdf8; /* sky-500 */
+		border: 2px solid #0f172a; /* slate-900 */
+	}
+</style>

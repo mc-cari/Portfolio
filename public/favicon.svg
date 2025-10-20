@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <rect width="32" height="32" fill="#0f172a" rx="6"/>
+  <g fill="#38bdf8">
+    <!-- Head circle -->
+    <circle cx="16" cy="12" r="5"/>
+    <!-- Body/shoulders -->
+    <path d="M8 26c0-4.4 3.6-8 8-8s8 3.6 8 8v2H8v-2z"/>
+  </g>
+</svg>
