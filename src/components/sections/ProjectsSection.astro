@@ -1,0 +1,24 @@
+---
+const projects = [
+	{ title: 'Agents Arena', image: '/Agents arena.png', alt: 'Agents Arena Screenshot', site: 'https://agents-arena.mccari.us/', code: 'https://github.com/mc-cari/LLM-ProgComp-V2', techs: [['https://cdn.simpleicons.org/python', 'Python'], ['https://cdn.simpleicons.org/typescript', 'TypeScript'], ['https://cdn.simpleicons.org/go', 'Go'], ['https://cdn.simpleicons.org/docker', 'Docker'], ['https://api.iconify.design/logos/grpc.svg', 'gRPC']], copy: 'A platform for competitive programming where AI agents compete in contests with ICPC rules to solve algorithmic problems. The project explores the capabilities of LLMs in algorithmic real-time problem-solving, considering the impact of reasoning time and response speed.', imageOrder: 'md:order-2', contentOrder: 'md:order-1' },
+	{ title: 'UbiCate UC', image: '/UbicateUC.png', alt: 'UbiCate UC Screenshot', site: 'https://ubicate.uc.cl/', code: 'https://github.com/open-source-uc/UbiCate-v2', techs: [['https://cdn.simpleicons.org/nextdotjs', 'Next.js'], ['https://cdn.simpleicons.org/tailwindcss', 'Tailwind CSS'], ['https://cdn.simpleicons.org/mapbox', 'Mapbox']], copy: 'A navigation web app to help university students locate classrooms and other points of interest on the campus. Led the development of the second version of the project to achieve high-performance navigation. It reached 7,000 visits in its first month of launch and maintains 500 visits per month.' },
+	{ title: 'Codeforces Live Standings', image: '/Codeforces live standings.png', alt: 'Codeforces Live Standings Screenshot', site: 'https://codeforces-live-standings.mccari.us/', code: 'https://github.com/mc-cari/codeforces-live-standings', techs: [['https://cdn.simpleicons.org/typescript', 'TypeScript'], ['https://cdn.simpleicons.org/nextdotjs', 'Next.js'], ['https://cdn.simpleicons.org/tailwindcss', 'Tailwind CSS']], copy: 'Website for visualization of Codeforces contest leaderboards with real-time updates. It is inspired by the overlay of ICPC world finals broadcasts.', imageOrder: 'md:order-2', contentOrder: 'md:order-1' },
+];
+---
+
+<section id="projects" class="py-20 md:py-32">
+	<div class="text-center"><h2 class="text-3xl md:text-4xl font-bold text-slate-100">My Projects</h2></div>
+	<div class="mt-20 max-w-5xl mx-auto space-y-24">
+		{projects.map((project) => (
+			<article class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+				<div class:list={['p-2 glass-card rounded-xl', project.imageOrder]}><div class="flex items-center space-x-1.5 p-2 border-b border-slate-700"><span class="w-3 h-3 rounded-full bg-red-500"></span><span class="w-3 h-3 rounded-full bg-yellow-500"></span><span class="w-3 h-3 rounded-full bg-green-500"></span></div><img src={project.image} alt={project.alt} class="rounded-b-lg w-full"></div>
+				<div class={project.contentOrder}>
+					<h3 class="text-2xl font-bold text-slate-100">{project.title}</h3>
+					<div class="flex items-center gap-4 my-3">{project.techs.map(([src, name]) => <img src={src} alt={`${name} icon`} title={name} class="h-6 w-6" />)}</div>
+					<p class="text-slate-400">{project.copy}</p>
+					<div class="mt-6 flex items-center space-x-4"><a href={project.site} target="_blank" rel="noopener noreferrer" class="flex items-center space-x-2 px-4 py-2 bg-sky-500/20 text-sky-300 hover:bg-sky-500/30 rounded-lg transition-colors"><span>Visit website</span></a><a href={project.code} target="_blank" rel="noopener noreferrer" class="flex items-center space-x-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"><span>Code</span></a></div>
+				</div>
+			</article>
+		))}
+	</div>
+</section>

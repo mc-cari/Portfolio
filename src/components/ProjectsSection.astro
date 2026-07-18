@@ -1,0 +1,45 @@
+---
+const projects = [
+	{
+		name: 'Agents Arena', image: '/Agents arena.png', imageAlt: 'Agents Arena Screenshot',
+		tech: [['https://cdn.simpleicons.org/python', 'Python'], ['https://cdn.simpleicons.org/typescript', 'TypeScript'], ['https://cdn.simpleicons.org/go', 'Go'], ['https://cdn.simpleicons.org/docker', 'Docker'], ['https://api.iconify.design/logos/grpc.svg', 'gRPC']],
+		description: 'A platform for competitive programming where AI agents compete in contests with ICPC rules to solve algorithmic problems. The project explores the capabilities of LLMs in algorithmic real-time problem-solving, considering the impact of reasoning time and response speed.',
+		website: 'https://agents-arena.mccari.us/', code: 'https://github.com/mc-cari/LLM-ProgComp-V2', reverse: true,
+	},
+	{
+		name: 'UbiCate UC', image: '/UbicateUC.png', imageAlt: 'UbiCate UC Screenshot',
+		tech: [['https://cdn.simpleicons.org/nextdotjs', 'Next.js'], ['https://cdn.simpleicons.org/tailwindcss', 'Tailwind CSS'], ['https://cdn.simpleicons.org/mapbox', 'Mapbox']],
+		description: 'A navigation web app to help university students locate classrooms and other points of interest on the campus. Led the development of the second version of the project to achieve high-performance navigation. It reached 7,000 visits in its first month of launch and maintains 500 visits per month.',
+		website: 'https://ubicate.uc.cl/', code: 'https://github.com/open-source-uc/UbiCate-v2', reverse: false,
+	},
+	{
+		name: 'Codeforces Live Standings', image: '/Codeforces live standings.png', imageAlt: 'Codeforces Live Standings Screenshot',
+		tech: [['https://cdn.simpleicons.org/typescript', 'TypeScript'], ['https://cdn.simpleicons.org/nextdotjs', 'Next.js'], ['https://cdn.simpleicons.org/tailwindcss', 'Tailwind CSS']],
+		description: 'Website for visualization of Codeforces contest leaderboards with real-time updates. It is inspired by the overlay of ICPC world finals broadcasts.',
+		website: 'https://codeforces-live-standings.mccari.us/', code: 'https://github.com/mc-cari/codeforces-live-standings', reverse: true,
+	},
+];
+---
+
+<section id="projects" class="py-20 md:py-32">
+	<div class="text-center"><h2 class="text-3xl md:text-4xl font-bold text-slate-100">My Projects</h2></div>
+	<div class="mt-20 max-w-5xl mx-auto space-y-24">
+		{projects.map((project) => (
+			<article class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+				<div class:list={['p-2 glass-card rounded-xl', { 'md:order-2': project.reverse }]}>
+					<div class="flex items-center space-x-1.5 p-2 border-b border-slate-700"><span class="w-3 h-3 rounded-full bg-red-500"></span><span class="w-3 h-3 rounded-full bg-yellow-500"></span><span class="w-3 h-3 rounded-full bg-green-500"></span></div>
+					<img src={project.image} alt={project.imageAlt} class="rounded-b-lg w-full" />
+				</div>
+				<div class:list={{ 'md:order-1': project.reverse }}>
+					<h3 class="text-2xl font-bold text-slate-100">{project.name}</h3>
+					<div class="flex items-center gap-4 my-3">{project.tech.map(([src, name]) => <img src={src} alt={`${name} icon`} title={name} class="h-6 w-6" />)}</div>
+					<p class="text-slate-400">{project.description}</p>
+					<div class="mt-6 flex items-center space-x-4">
+						<a href={project.website} target="_blank" rel="noopener noreferrer" class="flex items-center space-x-2 px-4 py-2 bg-sky-500/20 text-sky-300 hover:bg-sky-500/30 rounded-lg transition-colors"><span>Visit website</span></a>
+						<a href={project.code} target="_blank" rel="noopener noreferrer" class="flex items-center space-x-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.168 6.839 9.492.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.338 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd" /></svg><span>Code</span></a>
+					</div>
+				</div>
+			</article>
+		))}
+	</div>
+</section>
