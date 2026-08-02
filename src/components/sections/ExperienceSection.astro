@@ -1,24 +1,91 @@
 ---
 const roles = [
-	{ title: 'Research Intern', company: 'National Institute of Informatics', period: 'Sep 2024 - Mar 2025', place: 'Tokyo, Japan', bullets: ['Conducted research on real-time UAV flight conformance verification in Tokyo airspace using smart contracts.', 'Worked with a Java simulator for Unmanned Aircraft System Traffic Management (UTM) to enhance resilience and scalability.'] },
-	{ title: 'Software Engineer Intern', company: 'Nirvana Insurance', period: 'Dec 2023 - Feb 2024', place: 'Santiago, Chile', bullets: ['Developed a scheduled task in Go to automatically calculate fleet scores in PostgreSQL upon new data availability, reducing fleet score retrieval times by 70%.', 'Designed a Quota Manager that dynamically sets and updates request limits for the usage of third-party APIs with variable per-request costs, reducing overspending by 80%.', 'Implemented a Quota Manager server with gRPC, Redis, and PostgreSQL that can register and update new quotas at runtime and handle up to 100 million concurrent requests from internal services monthly.'] },
+	{
+		title: 'Associate Software Engineer',
+		company: 'ZeroFox',
+		period: 'Current',
+		place: 'Santiago, Chile',
+		logo: '/brands/zerofox.svg',
+		logoAlt: 'ZeroFox',
+		website: 'https://www.zerofox.com/',
+		bullets: [],
+	},
+	{
+		title: 'Research Intern',
+		company: 'National Institute of Informatics',
+		period: 'Sep 2024 - Mar 2025',
+		place: 'Tokyo, Japan',
+		logo: '/brands/nii.png',
+		logoAlt: 'National Institute of Informatics',
+		website: 'https://www.nii.ac.jp/en/',
+		bullets: [
+			'Conducted research on real-time UAV flight conformance verification in Tokyo airspace using smart contracts.',
+			'Worked with a Java simulator for Unmanned Aircraft System Traffic Management (UTM) to enhance resilience and scalability.',
+		],
+	},
+	{
+		title: 'Software Engineer Intern',
+		company: 'Nirvana Insurance',
+		period: 'Dec 2023 - Feb 2024',
+		place: 'Santiago, Chile',
+		logo: '/brands/nirvana.svg',
+		logoAlt: 'Nirvana Insurance',
+		website: 'https://www.nirvanatech.com/',
+		bullets: [
+			'Developed a scheduled task in Go to automatically calculate fleet scores in PostgreSQL upon new data availability, reducing fleet score retrieval times by 70%.',
+			'Designed a Quota Manager that dynamically sets and updates request limits for the usage of third-party APIs with variable per-request costs, reducing overspending by 80%.',
+			'Implemented a Quota Manager server with gRPC, Redis, and PostgreSQL that can register and update new quotas at runtime and handle up to 100 million concurrent requests from internal services monthly.',
+		],
+		article: 'https://engblog.nirvanatech.com/meet-the-interns-pt-3-mauricio-cari-f4ba2d6d463a',
+	},
 ];
 ---
 
-<section id="experience" class="py-20 md:py-32">
-	<div class="text-center"><h2 class="text-3xl md:text-4xl font-bold text-slate-100">Professional Experience</h2></div>
+<section id="experience" class="section-shell">
+	<div class="section-heading centered">
+		<h2 class="section-title">Professional Experience</h2>
+	</div>
 	<div class="mt-16 max-w-4xl mx-auto space-y-8">
 		{roles.map((role) => (
-			<div class="glass-card rounded-2xl p-8 hover:scale-[1.02] transition-all duration-300">
-				<div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-					<div><h3 class="text-2xl font-bold text-slate-100">{role.title}</h3><p class="text-sky-400 font-semibold text-lg">{role.company}</p></div>
-					<div class="mt-2 md:mt-0 text-right"><div class="inline-flex items-center px-4 py-2 bg-sky-500/20 text-sky-300 rounded-full text-sm font-medium">{role.period}</div><p class="text-slate-400 text-sm mt-1">{role.place}</p></div>
+			<article class="glass-card overflow-hidden rounded-xl transition-all duration-300 hover:-translate-y-1 hover:border-[rgba(164,172,134,.42)] hover:shadow-2xl hover:shadow-black/30">
+				<div class="flex flex-col gap-7 p-7 sm:flex-row sm:p-8">
+					<a
+						href={role.website}
+						target="_blank"
+						rel="noopener noreferrer"
+						class:list={[
+							'flex h-24 w-full shrink-0 items-center justify-center rounded-lg border border-[rgba(164,172,134,.24)] bg-[#faf9f6] shadow-lg shadow-black/20',
+							role.logo === '/brands/nii.png' ? 'px-3 sm:w-48' : 'px-5 sm:w-44',
+						]}
+						aria-label={`Visit ${role.company}`}
+					>
+						<img src={role.logo} alt={role.logoAlt} class="h-auto max-h-14 w-full max-w-[8.75rem] object-contain" loading="lazy" />
+					</a>
+
+					<div class="min-w-0 flex-1">
+						<div class="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+							<div>
+								<h3 class="text-2xl font-bold text-[#faf9f6]">{role.title}</h3>
+								<a href={role.website} target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1.5 font-semibold text-[#a4ac86] transition-colors hover:text-[#faf9f6]">
+									{role.company}
+									<svg class="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg>
+								</a>
+							</div>
+							<div class="md:text-right">
+								<div class="inline-flex whitespace-nowrap items-center rounded-full bg-[#2d4a2b]/60 px-3.5 py-1.5 text-sm font-medium text-[#d8dacd] ring-1 ring-inset ring-[#a4ac86]/25">{role.period}</div>
+								{role.place && <p class="mt-2 text-sm text-[#7d8471]">{role.place}</p>}
+							</div>
+						</div>
+
+						{role.bullets.length > 0 && (
+							<div class="mt-6 space-y-3 border-t border-[#a4ac86]/15 pt-6">
+								{role.bullets.map((bullet) => <div class="flex items-start gap-3"><div class="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-[#a4ac86]"></div><p class="leading-relaxed text-[#d8dacd]">{bullet}</p></div>)}
+								{role.article && <div class="flex items-start gap-3"><div class="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-[#a4ac86]"></div><p class="text-[#d8dacd]">Read more about the experience in the <a href={role.article} target="_blank" rel="noopener noreferrer" class="font-medium text-[#a4ac86] underline decoration-[#a4ac86]/40 underline-offset-4 transition-colors hover:text-[#faf9f6]">Meet the Interns</a> blog post.</p></div>}
+							</div>
+						)}
+					</div>
 				</div>
-				<div class="space-y-3">
-					{role.bullets.map((bullet) => <div class="flex items-start space-x-3"><div class="w-2 h-2 bg-sky-400 rounded-full mt-2 flex-shrink-0"></div><p class="text-slate-300">{bullet}</p></div>)}
-					{role.company === 'Nirvana Insurance' && <div class="flex items-start space-x-3"><div class="w-2 h-2 bg-sky-400 rounded-full mt-2 flex-shrink-0"></div><p class="text-slate-300">Read more about the experience in the following blog post: <a href="https://engblog.nirvanatech.com/meet-the-interns-pt-3-mauricio-cari-f4ba2d6d463a" target="_blank" rel="noopener noreferrer" class="text-sky-400 hover:text-sky-300 underline">Meet the Interns</a>.</p></div>}
-				</div>
-			</div>
+			</article>
 		))}
 	</div>
 </section>

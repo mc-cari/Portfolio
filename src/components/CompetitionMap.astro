@@ -2,6 +2,10 @@
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 const mapboxToken = import.meta.env.MAPBOX_TOKEN ?? '';
+const mapPlayLabels = {
+	idle: 'Follow',
+	playing: 'Stop',
+};
 
 const stops = [
 	{
@@ -14,8 +18,13 @@ const stops = [
 		result: 'Training camp',
 		detail: 'First training camp attended, two weeks of competition + classes',
 		coordinates: [-73.2392, -39.8176],
-		zoom: 5.2,
-		color: '#34d399',
+		zoom: 7,
+		color: '#a4ac86',
+		logo: '/brands/uach.png',
+		logoAlt: 'Universidad Austral de Chile crest',
+		markerTheme: 'light',
+		markerPreset: 'uach',
+		markerOffset: [0, 0],
 	},
 	{
 		id: 'baku-2019',
@@ -27,8 +36,13 @@ const stops = [
 		result: '#204 worldwide',
 		detail: 'Part of the four members of Team Chile, placing 204th among 325 high school programmers and in first place in the Chilean team.',
 		coordinates: [49.9166, 40.4192],
-		zoom: 5.2,
-		color: '#60a5fa',
+		zoom: 7,
+		color: '#7d8471',
+		logo: '/brands/ioi-2019.png',
+		logoAlt: 'IOI 2019 Baku logo',
+		markerTheme: 'light',
+		markerPreset: 'ioi',
+		markerOffset: [0, 0],
 	},
 	{
 		id: 'campinas-2023',
@@ -40,8 +54,13 @@ const stops = [
 		result: 'Training camp',
 		detail: 'Attended the World Final Class in Campinas: 85 hours of training, from January 23 to February 4.',
 		coordinates: [-47.0647, -22.8176],
-		zoom: 5.2,
-		color: '#34d399',
+		zoom: 7,
+		color: '#a4ac86',
+		logo: '/brands/unicamp.svg',
+		logoAlt: 'Unicamp logo',
+		markerTheme: 'light',
+		markerPreset: 'unicamp',
+		markerOffset: [0, 0],
 	},
 	{
 		id: 'buenos-aires-2023',
@@ -53,8 +72,13 @@ const stops = [
 		result: 'Training camp',
 		detail: 'Completed 90 hours of competitive-programming training, from July 31 to August 11.',
 		coordinates: [-58.5628, -34.6695],
-		zoom: 5.2,
-		color: '#34d399',
+		zoom: 7,
+		color: '#a4ac86',
+		logo: '/brands/tcarg.png',
+		logoAlt: 'Argentina competitive programming association logo',
+		markerTheme: 'light',
+		markerPreset: 'tcarg',
+		markerOffset: [0, 0],
 	},
 	{
 		id: 'coquimbo-2023',
@@ -66,8 +90,13 @@ const stops = [
 		result: '#23 in Latin America',
 		detail: 'Achieved 23rd place among 309 teams in Latin America.',
 		coordinates: [-71.351, -29.96495],
-		zoom: 5.2,
-		color: '#c084fc',
+		zoom: 7,
+		color: '#7d8471',
+		logo: '/brands/icpc-foundation-portrait.png',
+		logoAlt: 'ICPC Foundation logo',
+		markerTheme: 'light',
+		markerPreset: 'icpc',
+		markerOffset: [0, 0],
 	},
 	{
 		id: 'mumbai-2024',
@@ -79,8 +108,13 @@ const stops = [
 		result: '#10 worldwide',
 		detail: 'Secured 10th place in the Grand Finale out of 25 participants and 100,000+ overall participants.',
 		coordinates: [72.98856, 19.25958],
-		zoom: 5.2,
-		color: '#fb923c',
+		zoom: 7,
+		color: '#a4ac86',
+		logo: '/brands/codevita-season11.png',
+		logoAlt: 'TCS CodeVita Season XI Mumbai logo',
+		markerTheme: 'dark',
+		markerPreset: 'codevita11',
+		markerOffset: [0, 0],
 	},
 	{
 		id: 'chennai-2025',
@@ -92,8 +126,13 @@ const stops = [
 		result: '#4 worldwide',
 		detail: 'Achieved 4th place in the Grand Finale out of 25 participants and 100,000+ overall participants.',
 		coordinates: [80.21772, 12.82955],
-		zoom: 5.2,
-		color: '#facc15',
+		zoom: 7,
+		color: '#faf9f6',
+		logo: '/brands/codevita-season12-wide.png',
+		logoAlt: 'TCS CodeVita Season XII logo',
+		markerTheme: 'dark',
+		markerPreset: 'codevita12',
+		markerOffset: [0, 0],
 	},
 ];
 ---
@@ -107,9 +146,16 @@ const stops = [
 				<span class="atlas-loader" aria-hidden="true"></span>
 				<span>Loading map…</span>
 			</div>
-			<button type="button" class="atlas-play" data-map-play aria-pressed="false">
+			<button
+				type="button"
+				class="atlas-play"
+				data-map-play
+				data-map-idle-label={mapPlayLabels.idle}
+				data-map-playing-label={mapPlayLabels.playing}
+				aria-pressed="false"
+			>
 				<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 8 6-8 6V6Z"/></svg>
-				<span data-map-play-label>Follow the route</span>
+				<span data-map-play-label>{mapPlayLabels.idle}</span>
 			</button>
 		</div>
 
@@ -164,6 +210,11 @@ const stops = [
 		coordinates: [number, number];
 		zoom: number;
 		color: string;
+		logo: string;
+		logoAlt: string;
+		markerTheme: string;
+		markerPreset: string;
+		markerOffset: [number, number];
 	};
 
 	const atlas = document.querySelector<HTMLElement>('[data-competition-atlas]');
@@ -177,10 +228,15 @@ const stops = [
 		const stopButtons = [...atlas.querySelectorAll<HTMLButtonElement>('[data-stop-index]')];
 		const playButton = atlas.querySelector<HTMLButtonElement>('[data-map-play]');
 		const playLabel = atlas.querySelector<HTMLElement>('[data-map-play-label]');
+		const idlePlayLabel = playButton?.dataset.mapIdleLabel ?? '';
+		const playingPlayLabel = playButton?.dataset.mapPlayingLabel ?? '';
 		const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 		let map: MapboxMap | undefined;
+		let mapMarkerElements: HTMLButtonElement[] = [];
+		const markerDepartureTimers = new WeakMap<HTMLButtonElement, number>();
 		let activeIndex = 0;
 		let isPlaying = false;
+		let playbackSession = 0;
 
 		const setText = (selector: string, value: string) => {
 			const element = atlas.querySelector<HTMLElement>(selector);
@@ -190,6 +246,7 @@ const stops = [
 		const showStop = (index: number, moveCamera = true, cameraSpeed = prefersReducedMotion ? 100 : 0.42) => {
 			const stop = stops[index];
 			if (!stop) return;
+			const previousIndex = activeIndex;
 			activeIndex = index;
 			setText('[data-detail-year]', stop.year);
 			setText('[data-detail-progress]', `${String(index + 1).padStart(2, '0')} / ${String(stops.length).padStart(2, '0')}`);
@@ -204,13 +261,33 @@ const stops = [
 				button.classList.toggle('active', selected);
 				button.setAttribute('aria-pressed', String(selected));
 			});
+			mapMarkerElements.forEach((marker, markerIndex) => {
+				const selected = markerIndex === index;
+				const departureTimer = markerDepartureTimers.get(marker);
+				if (departureTimer) window.clearTimeout(departureTimer);
+				marker.classList.remove('departing');
+				marker.classList.toggle('active', selected);
+				if (!selected && markerIndex === previousIndex) {
+					marker.classList.add('departing');
+					markerDepartureTimers.set(marker, window.setTimeout(() => {
+						marker.classList.remove('departing');
+						markerDepartureTimers.delete(marker);
+					}, 420));
+				}
+				marker.setAttribute('aria-pressed', String(selected));
+			});
+			updateActiveMarkerZoom();
 			if (map?.isStyleLoaded()) {
-				map.setFeatureState({ source: 'competition-stops', id: stop.id }, { selected: true });
-				stops.forEach((otherStop, otherIndex) => {
-					if (otherIndex !== index) map?.setFeatureState({ source: 'competition-stops', id: otherStop.id }, { selected: false });
-				});
 				if (moveCamera) {
-					map.flyTo({ center: stop.coordinates, zoom: stop.zoom, speed: cameraSpeed, curve: 1.2, essential: false });
+					map.flyTo({
+						center: stop.coordinates,
+						zoom: stop.zoom,
+						bearing: 0,
+						pitch: 42,
+						speed: cameraSpeed,
+						curve: 0.8,
+						essential: false,
+					});
 				}
 			}
 		};
@@ -218,29 +295,67 @@ const stops = [
 		const setPlaying = (playing: boolean) => {
 			isPlaying = playing;
 			playButton?.setAttribute('aria-pressed', String(playing));
-			if (playLabel) playLabel.textContent = playing ? 'Stop route' : 'Follow the route';
+			if (playLabel) playLabel.textContent = playing ? playingPlayLabel : idlePlayLabel;
+		};
+
+		const stopJourney = () => {
+			playbackSession += 1;
+			map?.stop();
+			setPlaying(false);
 		};
 
 		const wait = (milliseconds: number) => new Promise<void>((resolve) => window.setTimeout(resolve, milliseconds));
+		const updateActiveMarkerZoom = () => {
+			if (!map) return;
+			const zoomDelta = Math.max(map.getZoom() - 1.25, 0);
+			const markerScale = Math.min(2, 0.9 + zoomDelta * 0.28);
+			const markerLift = Math.min(36, zoomDelta * 5.5);
+			mapMarkerElements.forEach((marker, index) => {
+				if (index === activeIndex) {
+					const markerWidth = Number(marker.dataset.markerWidth || 0);
+					const markerHeight = Number(marker.dataset.markerHeight || 0);
+					marker.style.setProperty('--marker-render-width', `${(markerWidth * markerScale).toFixed(1)}px`);
+					marker.style.setProperty('--marker-render-height', `${(markerHeight * markerScale).toFixed(1)}px`);
+				} else {
+					marker.style.removeProperty('--marker-render-width');
+					marker.style.removeProperty('--marker-render-height');
+					marker.style.setProperty('--marker-lift', '0px');
+				}
+				if (index === activeIndex) {
+					marker.style.setProperty('--marker-lift', `${(-markerLift).toFixed(1)}px`);
+				}
+			});
+		};
+		const waitForCamera = () => new Promise<void>((resolve) => {
+			if (!map?.isMoving()) {
+				resolve();
+				return;
+			}
+			map.once('moveend', () => resolve());
+		});
 
 		const playJourney = async () => {
 			if (isPlaying) {
-				setPlaying(false);
+				stopJourney();
 				return;
 			}
+			const session = ++playbackSession;
 			setPlaying(true);
-			for (let index = activeIndex; index < stops.length; index += 1) {
-				if (!isPlaying) return;
+			let index = activeIndex;
+			while (isPlaying && session === playbackSession) {
 				showStop(index);
-				await wait(prefersReducedMotion ? 850 : 5200);
+				await waitForCamera();
+				if (!isPlaying || session !== playbackSession) return;
+				await wait(prefersReducedMotion ? 1400 : 10000);
+				if (!isPlaying || session !== playbackSession) return;
+				index = (index + 1) % stops.length;
 			}
-			setPlaying(false);
 		};
 
 		stopButtons.forEach((button) => {
 			button.addEventListener('click', () => {
-				setPlaying(false);
-				showStop(Number(button.dataset.stopIndex), true, prefersReducedMotion ? 100 : 1.15);
+				stopJourney();
+				showStop(Number(button.dataset.stopIndex), true, prefersReducedMotion ? 100 : 0.9);
 			});
 		});
 		playButton?.addEventListener('click', playJourney);
@@ -257,14 +372,32 @@ const stops = [
 			map = new mapboxgl.Map({
 				container: mapElement,
 				accessToken: token,
-				style: 'mapbox://styles/mapbox/dark-v11',
+				style: 'mapbox://styles/mapbox/standard',
+				config: {
+					basemap: {
+						theme: 'monochrome',
+						lightPreset: 'night',
+						show3dObjects: true,
+						show3dBuildings: true,
+						show3dTrees: true,
+						show3dLandmarks: true,
+						show3dFacades: true,
+						showPointOfInterestLabels: false,
+						colorLand: '#111d13',
+						colorWater: '#050b06',
+						colorGreenspace: '#2d4a2b',
+						colorBuildings: '#445a40',
+						colorPlaceLabels: '#d8dacd',
+						colorRoadLabels: '#7d8471',
+					},
+				},
 				projection: 'globe',
-				center: [5, 12],
-				zoom: 1.25,
-				bearing: -8,
-				pitch: 8,
+				center: stops[0].coordinates,
+				zoom: 1.6,
+				bearing: 0,
+				pitch: 10,
 				minZoom: 0.8,
-				maxZoom: 13,
+				maxZoom: 16,
 				cooperativeGestures: true,
 				attributionControl: false,
 			});
@@ -273,95 +406,54 @@ const stops = [
 
 			map.on('style.load', () => {
 				map?.setFog({
-					color: 'rgb(35, 45, 70)',
-					'high-color': 'rgb(13, 23, 48)',
+					color: 'rgb(28, 43, 30)',
+					'high-color': 'rgb(8, 16, 9)',
 					'horizon-blend': 0.08,
-					'space-color': 'rgb(3, 7, 18)',
-					'star-intensity': 0.42,
+					'space-color': 'rgb(3, 8, 4)',
+					'star-intensity': 0.28,
 				});
 			});
+			map.on('zoom', updateActiveMarkerZoom);
+			map.on('moveend', updateActiveMarkerZoom);
 
 			map.on('load', () => {
-				const features = stops.map((stop, index) => ({
-					type: 'Feature' as const,
-					id: stop.id,
-					properties: { ...stop, coordinates: undefined, index },
-					geometry: { type: 'Point' as const, coordinates: stop.coordinates },
-				}));
-				const route = {
-					type: 'Feature' as const,
-					properties: {},
-					geometry: { type: 'LineString' as const, coordinates: stops.map((stop) => stop.coordinates) },
-				};
-
-				map?.addSource('competition-route', { type: 'geojson', data: route, lineMetrics: true });
-				map?.addLayer({
-					id: 'competition-route-halo',
-					type: 'line',
-					source: 'competition-route',
-					paint: { 'line-color': '#38bdf8', 'line-width': 7, 'line-opacity': 0.1, 'line-blur': 5 },
-				});
-				map?.addLayer({
-					id: 'competition-route-line',
-					type: 'line',
-					source: 'competition-route',
-					layout: { 'line-cap': 'round', 'line-join': 'round' },
-					paint: {
-						'line-width': ['interpolate', ['linear'], ['zoom'], 1, 1.4, 6, 3],
-						'line-opacity': 0.75,
-						'line-gradient': ['interpolate', ['linear'], ['line-progress'], 0, '#60a5fa', 0.4, '#c084fc', 0.72, '#fb923c', 1, '#facc15'],
-					},
-				});
-
-				map?.addSource('competition-stops', { type: 'geojson', data: { type: 'FeatureCollection', features }, generateId: false });
-				map?.addLayer({
-					id: 'competition-stop-pulse',
-					type: 'circle',
-					source: 'competition-stops',
-					paint: {
-						'circle-radius': ['case', ['boolean', ['feature-state', 'selected'], false], 18, 10],
-						'circle-color': ['get', 'color'],
-						'circle-opacity': ['case', ['boolean', ['feature-state', 'selected'], false], 0.2, 0.08],
-						'circle-blur': 0.35,
-					},
-				});
-				map?.addLayer({
-					id: 'competition-stop-points',
-					type: 'circle',
-					source: 'competition-stops',
-					paint: {
-						'circle-radius': ['case', ['boolean', ['feature-state', 'selected'], false], 7, 5],
-						'circle-color': ['get', 'color'],
-						'circle-stroke-color': '#f8fafc',
-						'circle-stroke-width': 2,
-					},
-				});
-				map?.addLayer({
-					id: 'competition-stop-labels',
-					type: 'symbol',
-					source: 'competition-stops',
-					minzoom: 1.4,
-					layout: {
-						'text-field': ['format', ['get', 'city'], { 'font-scale': 1 }, '\n', {}, ['get', 'year'], { 'font-scale': 0.8 }],
-						'text-font': ['DIN Pro Medium', 'Arial Unicode MS Regular'],
-						'text-size': 12,
-						'text-offset': [0, 1.8],
-						'text-anchor': 'top',
-						'text-allow-overlap': false,
-					},
-					paint: { 'text-color': '#e2e8f0', 'text-halo-color': '#0f172a', 'text-halo-width': 1.5 },
-				});
-
-				map?.on('click', 'competition-stop-points', (event) => {
-					const index = Number(event.features?.[0]?.properties?.index);
-					if (Number.isFinite(index)) {
-						setPlaying(false);
+				mapMarkerElements = stops.map((stop, index) => {
+					const marker = document.createElement('button');
+					marker.type = 'button';
+					marker.className = 'atlas-map-marker';
+					marker.setAttribute('aria-label', `Show ${stop.event} in ${stop.city}`);
+					marker.setAttribute('aria-pressed', String(index === activeIndex));
+					const card = document.createElement('span');
+					card.className = `atlas-map-marker-card ${stop.markerTheme} marker-${stop.markerPreset}`;
+					const pin = document.createElement('span');
+					pin.className = 'atlas-map-marker-pin';
+					const logo = document.createElement('img');
+					logo.src = stop.logo;
+					logo.alt = stop.logoAlt;
+					logo.className = 'atlas-map-marker-logo';
+					logo.decoding = 'async';
+					const tip = document.createElement('span');
+					tip.className = 'atlas-map-marker-tip';
+					card.append(logo);
+					pin.append(card, tip);
+					marker.append(pin);
+					marker.classList.toggle('active', index === activeIndex);
+					marker.addEventListener('click', (event) => {
+						event.stopPropagation();
+						stopJourney();
 						showStop(index);
-					}
+					});
+
+					new mapboxgl.Marker({ element: marker, anchor: 'bottom', offset: stop.markerOffset })
+						.setLngLat(stop.coordinates)
+						.addTo(map as MapboxMap);
+					marker.dataset.markerWidth = String(card.offsetWidth);
+					marker.dataset.markerHeight = String(card.offsetHeight);
+					marker.setAttribute('role', 'button');
+					return marker;
 				});
-				map?.on('mouseenter', 'competition-stop-points', () => { if (map) map.getCanvas().style.cursor = 'pointer'; });
-				map?.on('mouseleave', 'competition-stop-points', () => { if (map) map.getCanvas().style.cursor = ''; });
 				showStop(activeIndex, false);
+				updateActiveMarkerZoom();
 				status?.classList.add('loaded');
 			});
 
@@ -405,7 +497,7 @@ const stops = [
 
 	.atlas-heading h3 {
 		margin: 0;
-		color: #f8fafc;
+		color: #faf9f6;
 		font-size: clamp(1.6rem, 3vw, 2.25rem);
 		font-weight: 700;
 		letter-spacing: -.035em;
@@ -413,7 +505,7 @@ const stops = [
 
 	.atlas-intro {
 		margin: 0;
-		color: #94a3b8;
+		color: #7d8471;
 		font-size: .92rem;
 		line-height: 1.65;
 	}
@@ -422,10 +514,10 @@ const stops = [
 		display: grid;
 		grid-template-columns: minmax(0, 1fr);
 		overflow: hidden;
-		border: 1px solid rgba(71, 85, 105, .55);
+		border: 1px solid rgba(164, 172, 134, .24);
 		border-radius: 1.25rem;
-		background: #07101f;
-		box-shadow: 0 30px 80px rgba(2, 6, 23, .45), inset 0 1px 0 rgba(255, 255, 255, .03);
+		background: #0d1a0f;
+		box-shadow: 0 30px 80px rgba(2, 8, 3, .48), inset 0 1px 0 rgba(250, 249, 246, .035);
 	}
 
 	.atlas-map-wrap {
@@ -437,7 +529,7 @@ const stops = [
 	.atlas-map {
 		position: absolute;
 		inset: 0;
-		background: radial-gradient(circle at 52% 45%, #172554, #030712 72%);
+		background: radial-gradient(circle at 52% 45%, #2d4a2b, #050b06 72%);
 	}
 
 	.atlas-map-vignette {
@@ -445,7 +537,7 @@ const stops = [
 		z-index: 1;
 		inset: 0;
 		pointer-events: none;
-		box-shadow: inset -50px 0 70px -45px #07101f, inset 0 -70px 80px -70px #020617;
+		box-shadow: inset -50px 0 70px -45px #0d1a0f, inset 0 -70px 80px -70px #071009;
 	}
 
 	.atlas-map-status {
@@ -456,10 +548,10 @@ const stops = [
 		align-items: center;
 		justify-content: center;
 		gap: .75rem;
-		color: #94a3b8;
+		color: #7d8471;
 		font-size: .8rem;
 		letter-spacing: .04em;
-		background: radial-gradient(circle at center, rgba(15, 23, 42, .45), rgba(2, 6, 23, .92));
+		background: radial-gradient(circle at center, rgba(45, 74, 43, .45), rgba(7, 16, 9, .94));
 		transition: opacity .5s ease, visibility .5s ease;
 	}
 
@@ -477,8 +569,8 @@ const stops = [
 	.atlas-loader {
 		width: .85rem;
 		height: .85rem;
-		border: 1px solid rgba(56, 189, 248, .25);
-		border-top-color: #38bdf8;
+		border: 1px solid rgba(164, 172, 134, .25);
+		border-top-color: #a4ac86;
 		border-radius: 50%;
 		animation: atlas-spin 1s linear infinite;
 	}
@@ -492,11 +584,11 @@ const stops = [
 		align-items: center;
 		gap: .5rem;
 		padding: .55rem .8rem;
-		border: 1px solid rgba(148, 163, 184, .16);
+		border: 1px solid rgba(164, 172, 134, .2);
 		border-radius: 999px;
-		background: rgba(2, 6, 23, .68);
+		background: rgba(7, 16, 9, .78);
 		backdrop-filter: blur(10px);
-		color: #94a3b8;
+		color: #7d8471;
 		font-size: .65rem;
 		font-weight: 600;
 		letter-spacing: .08em;
@@ -507,7 +599,7 @@ const stops = [
 
 	.atlas-play:hover,
 	.atlas-play:focus-visible,
-	.atlas-play[aria-pressed="true"] { color: #e0f2fe; border-color: rgba(56, 189, 248, .5); background: rgba(3, 105, 161, .2); outline: none; }
+	.atlas-play[aria-pressed="true"] { color: #faf9f6; border-color: rgba(164, 172, 134, .55); background: rgba(45, 74, 43, .58); outline: none; }
 	.atlas-play svg { width: .85rem; fill: currentColor; }
 
 	.atlas-story {
@@ -516,8 +608,8 @@ const stops = [
 		display: flex;
 		flex-direction: column;
 		padding: 2rem;
-		border-top: 1px solid rgba(71, 85, 105, .4);
-		background: linear-gradient(155deg, rgba(15, 23, 42, .96), rgba(7, 16, 31, .98));
+		border-top: 1px solid rgba(164, 172, 134, .18);
+		background: linear-gradient(155deg, rgba(21, 37, 25, .97), rgba(7, 16, 9, .99));
 	}
 
 	.atlas-current-topline {
@@ -525,18 +617,18 @@ const stops = [
 		align-items: center;
 		justify-content: space-between;
 		margin-bottom: 1.7rem;
-		color: #64748b;
+		color: #7d8471;
 		font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 		font-size: .65rem;
 		letter-spacing: .13em;
 	}
 
-	.atlas-current-place { margin: 0 0 .55rem; color: #38bdf8; font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
-	.atlas-current h4 { min-height: 4rem; margin: 0; color: #f8fafc; font-size: 1.35rem; line-height: 1.35; letter-spacing: -.025em; }
-	.atlas-current-result { margin: .9rem 0 0; color: #facc15; font-size: .8rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
-	.atlas-current-venue { display: flex; align-items: flex-start; gap: .45rem; margin: .8rem 0 0; color: #cbd5e1; font-size: .72rem; font-weight: 600; line-height: 1.45; }
-	.atlas-current-venue svg { width: .9rem; height: .9rem; flex: 0 0 auto; margin-top: .05rem; fill: none; stroke: #38bdf8; stroke-width: 1.7; }
-	.atlas-current-copy { min-height: 4.5rem; margin: .7rem 0 0; color: #94a3b8; font-size: .84rem; line-height: 1.65; }
+	.atlas-current-place { margin: 0 0 .55rem; color: #a4ac86; font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+	.atlas-current h4 { min-height: 4rem; margin: 0; color: #faf9f6; font-size: 1.35rem; line-height: 1.35; letter-spacing: -.025em; }
+	.atlas-current-result { margin: .9rem 0 0; color: #a4ac86; font-size: .8rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+	.atlas-current-venue { display: flex; align-items: flex-start; gap: .45rem; margin: .8rem 0 0; color: #d8dacd; font-size: .72rem; font-weight: 600; line-height: 1.45; }
+	.atlas-current-venue svg { width: .9rem; height: .9rem; flex: 0 0 auto; margin-top: .05rem; fill: none; stroke: #a4ac86; stroke-width: 1.7; }
+	.atlas-current-copy { min-height: 4.5rem; margin: .7rem 0 0; color: #7d8471; font-size: .84rem; line-height: 1.65; }
 
 	.atlas-stops {
 		position: relative;
@@ -554,7 +646,7 @@ const stops = [
 		left: 8%;
 		right: 8%;
 		height: 1px;
-		background: #334155;
+		background: rgba(164, 172, 134, .3);
 	}
 
 	.atlas-stop {
@@ -566,7 +658,7 @@ const stops = [
 		padding: 0 .15rem;
 		border: 0;
 		background: transparent;
-		color: #64748b;
+		color: #7d8471;
 		cursor: pointer;
 	}
 
@@ -576,33 +668,180 @@ const stops = [
 		width: .55rem;
 		height: .55rem;
 		margin-bottom: .7rem;
-		border: 2px solid #475569;
+		border: 2px solid #7d8471;
 		border-radius: 50%;
-		background: #0f172a;
+		background: #0d1a0f;
 		transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease, background .25s ease;
 	}
 
 	.atlas-stop.active .atlas-stop-dot,
 	.atlas-stop:hover .atlas-stop-dot,
 	.atlas-stop:focus-visible .atlas-stop-dot {
-		border-color: #f8fafc;
+		border-color: #faf9f6;
 		background: var(--stop-color);
 		box-shadow: 0 0 0 5px color-mix(in srgb, var(--stop-color) 18%, transparent), 0 0 16px var(--stop-color);
 		transform: scale(1.15);
 	}
 
-	.atlas-stop:focus-visible { outline: 1px solid #38bdf8; outline-offset: .4rem; border-radius: .2rem; }
+	.atlas-stop:focus-visible { outline: 1px solid #a4ac86; outline-offset: .4rem; border-radius: .2rem; }
 	.atlas-stop-year { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .62rem; letter-spacing: .08em; }
-	.atlas-stop-name { max-width: 4rem; margin-top: .3rem; overflow: hidden; color: #94a3b8; font-size: .63rem; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
-	.atlas-stop.active .atlas-stop-year, .atlas-stop.active .atlas-stop-name { color: #e2e8f0; }
+	.atlas-stop-name { max-width: 4rem; margin-top: .3rem; overflow: hidden; color: #7d8471; font-size: .63rem; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+	.atlas-stop.active .atlas-stop-year, .atlas-stop.active .atlas-stop-name { color: #faf9f6; }
 
-	:global(.competition-atlas .mapboxgl-ctrl-group) { overflow: hidden; border: 1px solid rgba(148, 163, 184, .18); border-radius: .65rem; background: rgba(2, 6, 23, .65); box-shadow: none; backdrop-filter: blur(8px); }
+	:global(.competition-atlas .atlas-map-marker) {
+		position: absolute;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		font: inherit;
+		cursor: pointer;
+		will-change: auto;
+	}
+
+	:global(.competition-atlas .atlas-map-marker-pin) {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		transform: translateY(0);
+		transform-origin: center bottom;
+		transition: filter .22s ease;
+	}
+
+	:global(.competition-atlas .atlas-map-marker.active .atlas-map-marker-pin) {
+		transform: translateY(var(--marker-lift, 0px));
+	}
+
+	:global(.competition-atlas .atlas-map-marker.departing .atlas-map-marker-pin) {
+		transform: translateY(var(--marker-lift, 0px));
+		transition: filter .22s ease, transform .42s cubic-bezier(.22, 1, .36, 1);
+	}
+
+	:global(.competition-atlas .atlas-map-marker-card) {
+		position: relative;
+		z-index: 1;
+		display: flex;
+		width: var(--marker-render-width, 72px);
+		height: var(--marker-render-height, 72px);
+		align-items: center;
+		justify-content: center;
+		padding: 5px;
+		border: 2px solid rgba(250, 249, 246, .82);
+		border-radius: 16px;
+		background: #faf9f6;
+		box-shadow: 0 8px 22px rgba(2, 8, 3, .6), 0 0 0 3px rgba(45, 74, 43, .55);
+		transition: border-color .22s ease, box-shadow .22s ease;
+	}
+
+	:global(.competition-atlas .atlas-map-marker.departing .atlas-map-marker-card) {
+		transition: width .42s cubic-bezier(.22, 1, .36, 1), height .42s cubic-bezier(.22, 1, .36, 1), border-color .22s ease, box-shadow .22s ease;
+	}
+
+	:global(.competition-atlas .atlas-map-marker-card.dark) {
+		background: #071009;
+	}
+
+	:global(.competition-atlas .atlas-map-marker-card.marker-uach) {
+		width: var(--marker-render-width, 68px);
+		height: var(--marker-render-height, 78px);
+		padding: 5px 8px;
+	}
+
+	:global(.competition-atlas .atlas-map-marker-card.marker-ioi) {
+		width: var(--marker-render-width, 80px);
+		height: var(--marker-render-height, 76px);
+		padding: 3px;
+	}
+
+	:global(.competition-atlas .atlas-map-marker-card.marker-unicamp) {
+		width: var(--marker-render-width, 70px);
+		height: var(--marker-render-height, 76px);
+		padding: 6px 7px;
+	}
+
+	:global(.competition-atlas .atlas-map-marker-card.marker-tcarg) {
+		width: var(--marker-render-width, 82px);
+		height: var(--marker-render-height, 68px);
+		padding: 6px 5px;
+	}
+
+	:global(.competition-atlas .atlas-map-marker-card.marker-icpc) {
+		width: var(--marker-render-width, 78px);
+		height: var(--marker-render-height, 86px);
+		padding: 3px 5px;
+	}
+
+	:global(.competition-atlas .atlas-map-marker-card.marker-codevita11) {
+		width: var(--marker-render-width, 82px);
+		height: var(--marker-render-height, 82px);
+		padding: 2px;
+	}
+
+	:global(.competition-atlas .atlas-map-marker-card.marker-codevita12) {
+		width: var(--marker-render-width, 82px);
+		height: var(--marker-render-height, 82px);
+		padding: 2px;
+	}
+
+	:global(.competition-atlas .atlas-map-marker-card img) {
+		display: block;
+		width: 100%;
+		height: 100%;
+		image-rendering: auto;
+		object-fit: contain;
+	}
+
+	:global(.competition-atlas .atlas-map-marker-card.marker-codevita11 img) {
+		border-radius: 13px;
+		object-fit: cover;
+	}
+
+	:global(.competition-atlas .atlas-map-marker-card.marker-codevita12 img) {
+		border-radius: 13px;
+		object-fit: cover;
+	}
+
+	:global(.competition-atlas .atlas-map-marker-tip) {
+		position: relative;
+		z-index: 0;
+		width: .85rem;
+		height: .85rem;
+		margin-top: -.48rem;
+		border-right: 2px solid rgba(250, 249, 246, .82);
+		border-bottom: 2px solid rgba(250, 249, 246, .82);
+		border-radius: 0 0 .16rem 0;
+		background: #faf9f6;
+		box-shadow: 5px 5px 12px rgba(2, 8, 3, .3);
+		transform: rotate(45deg);
+	}
+
+	:global(.competition-atlas .atlas-map-marker.active .atlas-map-marker-card),
+	:global(.competition-atlas .atlas-map-marker:hover .atlas-map-marker-card),
+	:global(.competition-atlas .atlas-map-marker:focus-visible .atlas-map-marker-card) {
+		border-color: #a4ac86;
+		box-shadow: 0 10px 28px rgba(2, 8, 3, .7), 0 0 0 4px rgba(164, 172, 134, .18), 0 0 22px rgba(164, 172, 134, .34);
+	}
+
+	:global(.competition-atlas .atlas-map-marker.active .atlas-map-marker-pin),
+	:global(.competition-atlas .atlas-map-marker:hover .atlas-map-marker-pin),
+	:global(.competition-atlas .atlas-map-marker:focus-visible .atlas-map-marker-pin) {
+		filter: drop-shadow(0 5px 10px rgba(2, 8, 3, .38));
+	}
+
+	:global(.competition-atlas .atlas-map-marker:focus-visible) {
+		outline: none;
+	}
+
+	:global(.competition-atlas .mapboxgl-ctrl-group) { overflow: hidden; border: 1px solid rgba(164, 172, 134, .2); border-radius: .65rem; background: rgba(7, 16, 9, .72); box-shadow: none; backdrop-filter: blur(8px); }
 	:global(.competition-atlas .mapboxgl-ctrl-group button) { width: 2rem; height: 2rem; }
-	:global(.competition-atlas .mapboxgl-ctrl-group button + button) { border-top-color: rgba(148, 163, 184, .16); }
+	:global(.competition-atlas .mapboxgl-ctrl-group button + button) { border-top-color: rgba(164, 172, 134, .16); }
 	:global(.competition-atlas .mapboxgl-ctrl-icon) { filter: invert(1) opacity(.65); }
-	:global(.competition-atlas .mapboxgl-ctrl-attrib) { color: #64748b; background: rgba(2, 6, 23, .68); }
-	:global(.competition-atlas .mapboxgl-ctrl-attrib a) { color: #94a3b8; }
-	:global(.competition-atlas .mapboxgl-canvas:focus-visible) { outline: 2px solid #38bdf8; outline-offset: -2px; }
+	:global(.competition-atlas .mapboxgl-ctrl-attrib) { color: #7d8471; background: rgba(7, 16, 9, .76); }
+	:global(.competition-atlas .mapboxgl-ctrl-attrib a) { color: #a4ac86; }
+	:global(.competition-atlas .mapboxgl-canvas:focus-visible) { outline: 2px solid #a4ac86; outline-offset: -2px; }
 
 	@keyframes atlas-spin { to { transform: rotate(360deg); } }
 
@@ -621,5 +860,7 @@ const stops = [
 	@media (prefers-reduced-motion: reduce) {
 		.atlas-loader { animation: none; }
 		.atlas-map-status, .atlas-stop-dot { transition: none; }
+		:global(.competition-atlas .atlas-map-marker-pin),
+		:global(.competition-atlas .atlas-map-marker-card) { transition: none; }
 	}
 </style>
