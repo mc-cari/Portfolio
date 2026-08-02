@@ -53,20 +53,10 @@ const { title } = Astro.props;
 		margin: 0;
 		font-family: 'FreeSans', 'Trebuchet MS', sans-serif;
 		background:
+			url("data:image/svg+xml,%3Csvg width='420' height='420' viewBox='0 0 420 420' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23a4ac86' stroke-opacity='.055'%3E%3Cpath d='M-30 98c83-65 150 15 230-17s135-4 237 42'/%3E%3Cpath d='M-42 131c91-71 160 18 247-18s145-3 249 47'/%3E%3Cpath d='M-50 166c98-78 171 18 262-19s150 0 260 52'/%3E%3Cpath d='M-26 286c75-60 148-9 207-44s144-29 267 17'/%3E%3Cpath d='M-48 322c87-72 162-16 230-53s155-27 284 25'/%3E%3Cpath d='M64-25c-5 91 53 126 26 201s5 141 79 249'/%3E%3C/g%3E%3C/svg%3E") repeat,
 			radial-gradient(circle at 8% 5%, rgba(45, 74, 43, .38), transparent 29rem),
-			radial-gradient(circle at 88% 36%, rgba(125, 132, 113, .1), transparent 34rem),
 			linear-gradient(155deg, var(--forest-deep), var(--forest-ink) 42%, #050b06);
 		color: var(--ivory-muted);
-	}
-
-	body::before {
-		content: '';
-		position: fixed;
-		z-index: -1;
-		inset: 0;
-		background-image: url("data:image/svg+xml,%3Csvg width='420' height='420' viewBox='0 0 420 420' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23a4ac86' stroke-opacity='.075'%3E%3Cpath d='M-30 98c83-65 150 15 230-17s135-4 237 42'/%3E%3Cpath d='M-42 131c91-71 160 18 247-18s145-3 249 47'/%3E%3Cpath d='M-50 166c98-78 171 18 262-19s150 0 260 52'/%3E%3Cpath d='M-26 286c75-60 148-9 207-44s144-29 267 17'/%3E%3Cpath d='M-48 322c87-72 162-16 230-53s155-27 284 25'/%3E%3Cpath d='M64-25c-5 91 53 126 26 201s5 141 79 249'/%3E%3C/g%3E%3C/svg%3E");
-		mask-image: linear-gradient(to bottom, black, rgba(0,0,0,.3) 78%, transparent);
-		pointer-events: none;
 	}
 
 	::selection {
@@ -94,9 +84,8 @@ const { title } = Astro.props;
 
 	.glass-card {
 		border: 1px solid var(--forest-line);
-		background: linear-gradient(145deg, rgba(31, 51, 35, .72), rgba(10, 21, 12, .82));
+		background: linear-gradient(145deg, rgba(31, 51, 35, .94), rgba(10, 21, 12, .97));
 		box-shadow: inset 0 1px 0 rgba(250, 249, 246, .035), 0 24px 60px rgba(2, 8, 3, .24);
-		backdrop-filter: blur(14px);
 	}
 
 	.section-shell {
@@ -224,9 +213,8 @@ const { title } = Astro.props;
 		transform: translateX(-50%);
 		border: 1px solid rgba(164, 172, 134, .2);
 		border-radius: 999px;
-		background: rgba(7, 16, 9, .78);
+		background: rgba(7, 16, 9, .96);
 		box-shadow: 0 12px 36px rgba(1, 5, 2, .34);
-		backdrop-filter: blur(16px);
 	}
 
 	.site-nav { display: flex; justify-content: center; align-items: center; gap: clamp(.75rem, 3vw, 2rem); padding: .72rem 1.25rem; }
