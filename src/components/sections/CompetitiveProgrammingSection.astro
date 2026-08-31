@@ -1,5 +1,10 @@
 ---
 import CompetitionMap from '../CompetitionMap.astro';
+import { Image } from 'astro:assets';
+import ioiPhoto from '../../assets/International Olympiad in Informatics.png';
+import ioiLogo from '../../assets/brands/ioi-2019.png';
+import codevitaPhoto from '../../assets/TCS Codevita 2025.jpeg';
+import codevitaLogo from '../../assets/brands/codevita.png';
 
 const remoteCompetitions = [
 	{ title: 'TCS CodeVita Season 10', result: '#2 Worldwide', year: '2022', tone: 'text-green-400', copy: 'After three qualification rounds, I was awarded 2nd place out of 30 participants in the Guinness World Record-holding competition for the largest computer programming contest with 100,000+ participants overall rounds.' },
@@ -17,27 +22,26 @@ const remoteCompetitions = [
 	<CompetitionMap />
 
 	<div class="mt-10 max-w-5xl mx-auto grid grid-cols-1 gap-6 md:grid-cols-2">
-		<figure class="group overflow-hidden rounded-xl border border-[#a4ac86]/20 bg-[#152519]/70 shadow-xl shadow-black/20">
+		<figure class="group relative overflow-hidden rounded-xl border border-[#a4ac86]/20 bg-[#152519]/70 shadow-xl shadow-black/20">
 			<div class="relative aspect-[4/3] overflow-hidden bg-[#071009]">
-				<img src="/International Olympiad in Informatics.png" alt="Mauricio competing for Chile at IOI 2019 in Baku" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.035]" loading="lazy" />
+				<Image src={ioiPhoto} alt="Mauricio competing for Chile at IOI 2019 in Baku" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.035]" />
 				<div class="absolute inset-0 bg-gradient-to-t from-[#071009]/90 via-transparent to-transparent" aria-hidden="true"></div>
 				<div class="absolute left-4 top-4 flex h-20 w-20 items-center justify-center rounded-xl border border-white/20 bg-white/95 p-2 shadow-xl backdrop-blur">
-					<img src="/brands/ioi-2019.png" alt="IOI 2019 Baku logo" class="h-full w-full object-contain" loading="lazy" />
+					<Image src={ioiLogo} alt="IOI 2019 Baku logo" class="h-full w-full object-contain" />
 				</div>
-				<figcaption class="absolute inset-x-4 bottom-4 text-left text-sm font-bold text-white">Representing Chile at IOI 2019 <span class="block mt-1 text-xs font-medium text-white/70">Baku, Azerbaijan</span></figcaption>
 			</div>
-
+			<figcaption class="absolute inset-x-4 bottom-4 text-left text-sm font-bold text-white">Representing Chile at IOI 2019 <span class="block mt-1 text-xs font-medium text-white/70">Baku, Azerbaijan</span></figcaption>
 		</figure>
 
-		<figure class="group overflow-hidden rounded-xl border border-[#a4ac86]/20 bg-[#152519]/70 shadow-xl shadow-black/20">
+		<figure class="group relative overflow-hidden rounded-xl border border-[#a4ac86]/20 bg-[#152519]/70 shadow-xl shadow-black/20">
 			<div class="relative aspect-[4/3] overflow-hidden bg-[#071009]">
-				<img src="/TCS Codevita 2025.jpeg" alt="Mauricio receiving his TCS CodeVita Season 12 award" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.035]" loading="lazy" />
+				<Image src={codevitaPhoto} alt="Mauricio receiving his TCS CodeVita Season 12 award" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.035]" />
 				<div class="absolute inset-0 bg-gradient-to-t from-[#071009]/90 via-transparent to-transparent" aria-hidden="true"></div>
 				<div class="absolute left-4 top-4 flex h-14 w-44 items-center justify-center rounded-xl border border-white/15 bg-[#071009]/90 px-4 shadow-xl backdrop-blur">
-					<img src="/brands/codevita.png" alt="TCS CodeVita" class="h-auto w-full object-contain" loading="lazy" />
+					<Image src={codevitaLogo} alt="TCS CodeVita" class="h-auto w-full object-contain" />
 				</div>
-				<figcaption class="absolute inset-x-4 bottom-4 text-left text-sm font-bold text-white">CodeVita Season 12 Grand Finale <span class="block mt-1 text-xs font-medium text-white/70">Chennai, India · #4 worldwide</span></figcaption>
 			</div>
+			<figcaption class="absolute inset-x-4 bottom-4 text-left text-sm font-bold text-white">CodeVita Season 12 Grand Finale <span class="block mt-1 text-xs font-medium text-white/70">Chennai, India · #4 worldwide</span></figcaption>
 		</figure>
 	</div>
 

@@ -1,11 +1,16 @@
 ---
+import { Image } from 'astro:assets';
+import niiLogo from '../../assets/brands/nii.png';
+import nirvanaLogo from '../../assets/brands/nirvana.svg';
+import zeroFoxLogo from '../../assets/brands/zerofox.svg';
+
 const roles = [
 	{
 		title: 'Associate Software Engineer',
 		company: 'ZeroFox',
 		period: 'Current',
 		place: 'Santiago, Chile',
-		logo: '/brands/zerofox.svg',
+		logo: zeroFoxLogo,
 		logoAlt: 'ZeroFox',
 		website: 'https://www.zerofox.com/',
 		bullets: [],
@@ -15,7 +20,7 @@ const roles = [
 		company: 'National Institute of Informatics',
 		period: 'Sep 2024 - Mar 2025',
 		place: 'Tokyo, Japan',
-		logo: '/brands/nii.png',
+		logo: niiLogo,
 		logoAlt: 'National Institute of Informatics',
 		website: 'https://www.nii.ac.jp/en/',
 		bullets: [
@@ -28,7 +33,7 @@ const roles = [
 		company: 'Nirvana Insurance',
 		period: 'Dec 2023 - Feb 2024',
 		place: 'Santiago, Chile',
-		logo: '/brands/nirvana.svg',
+		logo: nirvanaLogo,
 		logoAlt: 'Nirvana Insurance',
 		website: 'https://www.nirvanatech.com/',
 		bullets: [
@@ -56,11 +61,11 @@ const roles = [
 						rel="noopener noreferrer"
 						class:list={[
 							'flex h-24 w-full shrink-0 items-center justify-center rounded-lg border border-[rgba(164,172,134,.24)] bg-[#faf9f6] shadow-lg shadow-black/20',
-							role.logo === '/brands/nii.png' ? 'px-3 sm:w-48' : 'px-5 sm:w-44',
+							role.logo === niiLogo ? 'px-3 sm:w-48' : 'px-5 sm:w-44',
 						]}
 						aria-label={`Visit ${role.company}`}
 					>
-						<img src={role.logo} alt={role.logoAlt} class="h-auto max-h-14 w-full max-w-[8.75rem] object-contain" loading="lazy" />
+						<Image src={role.logo} alt={role.logoAlt} class="h-auto max-h-14 w-full max-w-[8.75rem] object-contain" />
 					</a>
 
 					<div class="min-w-0 flex-1">

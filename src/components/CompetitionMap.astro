@@ -1,5 +1,12 @@
 ---
 import 'mapbox-gl/dist/mapbox-gl.css';
+import codevitaSeason11Logo from '../assets/brands/codevita-season11.png';
+import codevitaSeason12Logo from '../assets/brands/codevita-season12-wide.png';
+import icpcLogo from '../assets/brands/icpc-foundation-portrait.png';
+import ioiLogo from '../assets/brands/ioi-2019.png';
+import tcargLogo from '../assets/brands/tcarg.png';
+import uachLogo from '../assets/brands/uach.png';
+import unicampLogo from '../assets/brands/unicamp.svg';
 
 const mapboxToken = import.meta.env.MAPBOX_TOKEN ?? '';
 const mapPlayLabels = {
@@ -20,7 +27,7 @@ const stops = [
 		coordinates: [-73.2392, -39.8176],
 		zoom: 7,
 		color: '#a4ac86',
-		logo: '/brands/uach.png',
+		logo: uachLogo.src,
 		logoAlt: 'Universidad Austral de Chile crest',
 		markerTheme: 'light',
 		markerPreset: 'uach',
@@ -38,7 +45,7 @@ const stops = [
 		coordinates: [49.9166, 40.4192],
 		zoom: 7,
 		color: '#7d8471',
-		logo: '/brands/ioi-2019.png',
+		logo: ioiLogo.src,
 		logoAlt: 'IOI 2019 Baku logo',
 		markerTheme: 'light',
 		markerPreset: 'ioi',
@@ -56,7 +63,7 @@ const stops = [
 		coordinates: [-47.0647, -22.8176],
 		zoom: 7,
 		color: '#a4ac86',
-		logo: '/brands/unicamp.svg',
+		logo: unicampLogo.src,
 		logoAlt: 'Unicamp logo',
 		markerTheme: 'light',
 		markerPreset: 'unicamp',
@@ -74,7 +81,7 @@ const stops = [
 		coordinates: [-58.5628, -34.6695],
 		zoom: 7,
 		color: '#a4ac86',
-		logo: '/brands/tcarg.png',
+		logo: tcargLogo.src,
 		logoAlt: 'Argentina competitive programming association logo',
 		markerTheme: 'light',
 		markerPreset: 'tcarg',
@@ -92,7 +99,7 @@ const stops = [
 		coordinates: [-71.351, -29.96495],
 		zoom: 7,
 		color: '#7d8471',
-		logo: '/brands/icpc-foundation-portrait.png',
+		logo: icpcLogo.src,
 		logoAlt: 'ICPC Foundation logo',
 		markerTheme: 'light',
 		markerPreset: 'icpc',
@@ -110,7 +117,7 @@ const stops = [
 		coordinates: [72.98856, 19.25958],
 		zoom: 7,
 		color: '#a4ac86',
-		logo: '/brands/codevita-season11.png',
+		logo: codevitaSeason11Logo.src,
 		logoAlt: 'TCS CodeVita Season XI Mumbai logo',
 		markerTheme: 'dark',
 		markerPreset: 'codevita11',
@@ -128,7 +135,7 @@ const stops = [
 		coordinates: [80.21772, 12.82955],
 		zoom: 7,
 		color: '#faf9f6',
-		logo: '/brands/codevita-season12-wide.png',
+		logo: codevitaSeason12Logo.src,
 		logoAlt: 'TCS CodeVita Season XII logo',
 		markerTheme: 'dark',
 		markerPreset: 'codevita12',
@@ -140,7 +147,7 @@ const stops = [
 <div class="competition-atlas" data-competition-atlas data-mapbox-token={mapboxToken}>
 	<div class="atlas-shell">
 		<div class="atlas-map-wrap">
-			<div id="competition-map" class="atlas-map" aria-label="Interactive globe showing Mauricio's in-person competition history"></div>
+			<div id="competition-map" class="atlas-map" role="region" aria-label="Competition history map. Use the timeline beside it to explore each stop."></div>
 			<div class="atlas-map-fallback" aria-hidden="true">
 				<div class="fallback-orbit fallback-orbit-one"></div>
 				<div class="fallback-orbit fallback-orbit-two"></div>
@@ -425,6 +432,7 @@ const stops = [
 
 			map.on('load', () => {
 				mapWrap?.classList.add('map-ready');
+				mapElement.querySelector<HTMLCanvasElement>('.mapboxgl-canvas')?.removeAttribute('tabindex');
 				mapMarkerElements = stops.map((stop, index) => {
 					const marker = document.createElement('button');
 					marker.type = 'button';
@@ -433,16 +441,12 @@ const stops = [
 					marker.setAttribute('aria-pressed', String(index === activeIndex));
 					const card = document.createElement('span');
 					card.className = `atlas-map-marker-card ${stop.markerTheme} marker-${stop.markerPreset}`;
+					card.setAttribute('aria-hidden', 'true');
+					card.style.backgroundImage = `url("${stop.logo}")`;
 					const pin = document.createElement('span');
 					pin.className = 'atlas-map-marker-pin';
-					const logo = document.createElement('img');
-					logo.src = stop.logo;
-					logo.alt = stop.logoAlt;
-					logo.className = 'atlas-map-marker-logo';
-					logo.decoding = 'async';
 					const tip = document.createElement('span');
 					tip.className = 'atlas-map-marker-tip';
-					card.append(logo);
 					pin.append(card, tip);
 					marker.append(pin);
 					marker.classList.toggle('active', index === activeIndex);
@@ -457,7 +461,6 @@ const stops = [
 						.addTo(map as MapboxMap);
 					marker.dataset.markerWidth = String(card.offsetWidth);
 					marker.dataset.markerHeight = String(card.offsetHeight);
-					marker.setAttribute('role', 'button');
 					return marker;
 				});
 				showStop(activeIndex, false);
@@ -780,6 +783,9 @@ const stops = [
 		border: 2px solid rgba(250, 249, 246, .82);
 		border-radius: 16px;
 		background: #faf9f6;
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: contain;
 		box-shadow: 0 8px 22px rgba(2, 8, 3, .6), 0 0 0 3px rgba(45, 74, 43, .55);
 		transition: border-color .22s ease, box-shadow .22s ease;
 	}

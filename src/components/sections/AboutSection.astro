@@ -1,6 +1,11 @@
+---
+import { Image } from 'astro:assets';
+import profileImage from '../../assets/Profile.jpg';
+---
+
 <section id="about" class="section-shell">
 	<div class="grid md:grid-cols-5 gap-12 md:gap-16 items-center">
-		<div class="md:col-span-2 flex justify-center"><div class="profile-frame"><img src="/Profile.jpg" alt="Portrait of Mauricio Cari Leal" class="w-64 h-80 object-cover" loading="lazy"></div></div>
+		<div class="md:col-span-2 flex justify-center"><div class="profile-frame"><Image src={profileImage} alt="Portrait of Mauricio Cari Leal" class="w-64 h-80 object-cover" /></div></div>
 		<div class="md:col-span-3">
 			<h2 class="section-title">About Me</h2>
 			<div class="mt-7 max-w-2xl space-y-5">

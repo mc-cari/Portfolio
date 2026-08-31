@@ -1,8 +1,15 @@
 ---
+import { Image } from 'astro:assets';
+import agentsArenaImage from '../../assets/Agents arena.png';
+import codeforcesLiveStandingsImage from '../../assets/Codeforces live standings.png';
+import grpcLogo from '../../assets/brands/grpc.png';
+import nextJsLogo from '../../assets/brands/nextjs.svg';
+import ubicateUcImage from '../../assets/UbicateUC.png';
+
 const projects = [
-	{ title: 'Agents Arena', image: '/Agents arena.png', alt: 'Agents Arena Screenshot', site: 'https://agents-arena.mccari.us/', code: 'https://github.com/mc-cari/LLM-ProgComp-V2', techs: [['https://cdn.simpleicons.org/python', 'Python'], ['https://cdn.simpleicons.org/typescript', 'TypeScript'], ['https://cdn.simpleicons.org/go', 'Go'], ['https://cdn.simpleicons.org/docker', 'Docker'], ['/brands/grpc.png', 'gRPC']], copy: 'A platform for competitive programming where AI agents compete in contests with ICPC rules to solve algorithmic problems. The project tests agents in real-time problem-solving, considering reasoning time plus response speed.', imageOrder: 'md:order-2', contentOrder: 'md:order-1' },
-	{ title: 'UbiCate UC', image: '/UbicateUC.png', alt: 'UbiCate UC Screenshot', site: 'https://ubicate.uc.cl/', code: 'https://github.com/open-source-uc/UbiCate-v2', techs: [['/brands/nextjs.svg', 'Next.js'], ['https://cdn.simpleicons.org/tailwindcss', 'Tailwind CSS'], ['https://cdn.simpleicons.org/mapbox/FFFFFF', 'Mapbox']], copy: 'A navigation web app to help university students locate classrooms on different university campuses. Led the development of the second version of the project to achieve a fast and reliable navigation experience. It reached 7,000 visits in its first month after launch and maintains 500 visits per month.' },
-	{ title: 'Codeforces Live Standings', image: '/Codeforces live standings.png', alt: 'Codeforces Live Standings Screenshot', site: 'https://codeforces-live-standings.mccari.us/', code: 'https://github.com/mc-cari/codeforces-live-standings', techs: [['https://cdn.simpleicons.org/typescript', 'TypeScript'], ['/brands/nextjs.svg', 'Next.js'], ['https://cdn.simpleicons.org/tailwindcss', 'Tailwind CSS']], copy: 'A website to track Codeforces (the most popular competitive programming practice website) contest leaderboards with real-time updates. It is inspired by the overlays used in ICPC World Finals broadcasts.', imageOrder: 'md:order-2', contentOrder: 'md:order-1' },
+	{ title: 'Agents Arena', image: agentsArenaImage, alt: 'Agents Arena Screenshot', site: 'https://agents-arena.mccari.us/', code: 'https://github.com/mc-cari/LLM-ProgComp-V2', techs: [['https://cdn.simpleicons.org/python', 'Python'], ['https://cdn.simpleicons.org/typescript', 'TypeScript'], ['https://cdn.simpleicons.org/go', 'Go'], ['https://cdn.simpleicons.org/docker', 'Docker'], [grpcLogo.src, 'gRPC']], copy: 'A platform for competitive programming where AI agents compete in contests with ICPC rules to solve algorithmic problems. The project tests agents in real-time problem-solving, considering reasoning time plus response speed.', imageOrder: 'md:order-2', contentOrder: 'md:order-1' },
+	{ title: 'UbiCate UC', image: ubicateUcImage, alt: 'UbiCate UC Screenshot', site: 'https://ubicate.uc.cl/', code: 'https://github.com/open-source-uc/UbiCate-v2', techs: [[nextJsLogo.src, 'Next.js'], ['https://cdn.simpleicons.org/tailwindcss', 'Tailwind CSS'], ['https://cdn.simpleicons.org/mapbox/FFFFFF', 'Mapbox']], copy: 'A navigation web app to help university students locate classrooms on different university campuses. Led the development of the second version of the project to achieve a fast and reliable navigation experience. It reached 7,000 visits in its first month after launch and maintains 500 visits per month.' },
+	{ title: 'Codeforces Live Standings', image: codeforcesLiveStandingsImage, alt: 'Codeforces Live Standings Screenshot', site: 'https://codeforces-live-standings.mccari.us/', code: 'https://github.com/mc-cari/codeforces-live-standings', techs: [['https://cdn.simpleicons.org/typescript', 'TypeScript'], [nextJsLogo.src, 'Next.js'], ['https://cdn.simpleicons.org/tailwindcss', 'Tailwind CSS']], copy: 'A website to track Codeforces (the most popular competitive programming practice website) contest leaderboards with real-time updates. It is inspired by the overlays used in ICPC World Finals broadcasts.', imageOrder: 'md:order-2', contentOrder: 'md:order-1' },
 ];
 ---
 
@@ -18,14 +25,14 @@ const projects = [
 					<div class="flex items-center justify-between border-b border-[#c6d58f]/15 p-2">
 						<div class="flex items-center space-x-1.5" aria-hidden="true"><span class="w-2.5 h-2.5 rounded-full bg-[#31533a]"></span><span class="w-2.5 h-2.5 rounded-full bg-[#8e9f8b]"></span><span class="w-2.5 h-2.5 rounded-full bg-[#e2ad72]"></span></div>
 					</div>
-					<img src={project.image} alt={project.alt} class="rounded-b-md w-full" loading="lazy">
+					<Image src={project.image} alt={project.alt} class="rounded-b-md w-full" />
 				</div>
 				<div class={project.contentOrder}>
 					<h3 class="mt-2 text-3xl font-bold text-[#faf9f6]">{project.title}</h3>
 					<div class="mt-5 flex flex-wrap items-center gap-2" aria-label={`${project.title} technology stack`}>
 						{project.techs.map(([src, name]) => (
 							<span class="tech-pill">
-								<img src={src} alt="" aria-hidden="true" class="h-4 w-4 object-contain" loading="lazy" />
+								<Image src={src} alt="" aria-hidden="true" width={16} height={16} class="h-4 w-4 object-contain" />
 								<span>{name}</span>
 							</span>
 						))}
