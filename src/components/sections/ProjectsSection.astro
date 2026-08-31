@@ -1,33 +1,36 @@
 ---
 const projects = [
-	{ title: 'Agents Arena', image: '/Agents arena.png', alt: 'Agents Arena Screenshot', site: 'https://agents-arena.mccari.us/', code: 'https://github.com/mc-cari/LLM-ProgComp-V2', techs: [['https://cdn.simpleicons.org/python', 'Python'], ['https://cdn.simpleicons.org/typescript', 'TypeScript'], ['https://cdn.simpleicons.org/go', 'Go'], ['https://cdn.simpleicons.org/docker', 'Docker'], ['/brands/grpc.png', 'gRPC']], copy: 'A platform for competitive programming where AI agents compete in contests with ICPC rules to solve algorithmic problems. The project explores the capabilities of LLMs in algorithmic real-time problem-solving, considering the impact of reasoning time and response speed.', imageOrder: 'md:order-2', contentOrder: 'md:order-1' },
-	{ title: 'UbiCate UC', image: '/UbicateUC.png', alt: 'UbiCate UC Screenshot', site: 'https://ubicate.uc.cl/', code: 'https://github.com/open-source-uc/UbiCate-v2', techs: [['/brands/nextjs.svg', 'Next.js'], ['https://cdn.simpleicons.org/tailwindcss', 'Tailwind CSS'], ['https://cdn.simpleicons.org/mapbox/FFFFFF', 'Mapbox']], copy: 'A navigation web app to help university students locate classrooms and other points of interest on the campus. Led the development of the second version of the project to achieve high-performance navigation. It reached 7,000 visits in its first month of launch and maintains 500 visits per month.' },
-	{ title: 'Codeforces Live Standings', image: '/Codeforces live standings.png', alt: 'Codeforces Live Standings Screenshot', site: 'https://codeforces-live-standings.mccari.us/', code: 'https://github.com/mc-cari/codeforces-live-standings', techs: [['https://cdn.simpleicons.org/typescript', 'TypeScript'], ['/brands/nextjs.svg', 'Next.js'], ['https://cdn.simpleicons.org/tailwindcss', 'Tailwind CSS']], copy: 'Website for visualization of Codeforces contest leaderboards with real-time updates. It is inspired by the overlay of ICPC world finals broadcasts.', imageOrder: 'md:order-2', contentOrder: 'md:order-1' },
+	{ title: 'Agents Arena', image: '/Agents arena.png', alt: 'Agents Arena Screenshot', site: 'https://agents-arena.mccari.us/', code: 'https://github.com/mc-cari/LLM-ProgComp-V2', techs: [['https://cdn.simpleicons.org/python', 'Python'], ['https://cdn.simpleicons.org/typescript', 'TypeScript'], ['https://cdn.simpleicons.org/go', 'Go'], ['https://cdn.simpleicons.org/docker', 'Docker'], ['/brands/grpc.png', 'gRPC']], copy: 'A platform for competitive programming where AI agents compete in contests with ICPC rules to solve algorithmic problems. The project tests agents in real-time problem-solving, considering reasoning time plus response speed.', imageOrder: 'md:order-2', contentOrder: 'md:order-1' },
+	{ title: 'UbiCate UC', image: '/UbicateUC.png', alt: 'UbiCate UC Screenshot', site: 'https://ubicate.uc.cl/', code: 'https://github.com/open-source-uc/UbiCate-v2', techs: [['/brands/nextjs.svg', 'Next.js'], ['https://cdn.simpleicons.org/tailwindcss', 'Tailwind CSS'], ['https://cdn.simpleicons.org/mapbox/FFFFFF', 'Mapbox']], copy: 'A navigation web app to help university students locate classrooms on different university campuses. Led the development of the second version of the project to achieve a fast and reliable navigation experience. It reached 7,000 visits in its first month after launch and maintains 500 visits per month.' },
+	{ title: 'Codeforces Live Standings', image: '/Codeforces live standings.png', alt: 'Codeforces Live Standings Screenshot', site: 'https://codeforces-live-standings.mccari.us/', code: 'https://github.com/mc-cari/codeforces-live-standings', techs: [['https://cdn.simpleicons.org/typescript', 'TypeScript'], ['/brands/nextjs.svg', 'Next.js'], ['https://cdn.simpleicons.org/tailwindcss', 'Tailwind CSS']], copy: 'A website to track Codeforces (the most popular competitive programming practice website) contest leaderboards with real-time updates. It is inspired by the overlays used in ICPC World Finals broadcasts.', imageOrder: 'md:order-2', contentOrder: 'md:order-1' },
 ];
 ---
 
 <section id="projects" class="section-shell">
-	<div class="section-heading centered"><h2 class="section-title">My Projects</h2></div>
-	<div class="mt-20 max-w-5xl mx-auto space-y-24">
+	<div class="section-heading centered">
+		<h2 class="section-title">Projects with a point of view.</h2>
+		<p class="mt-6 body-copy">A selection of products and experiments where performance, clarity, and curiosity meet.</p>
+	</div>
+	<div class="mt-16 max-w-5xl mx-auto space-y-20">
 		{projects.map((project) => (
-			<article class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-				<div class:list={['p-2 glass-card rounded-lg', project.imageOrder]}><div class="flex items-center space-x-1.5 p-2 border-b border-[#a4ac86]/15"><span class="w-2.5 h-2.5 rounded-full bg-[#2d4a2b]"></span><span class="w-2.5 h-2.5 rounded-full bg-[#7d8471]"></span><span class="w-2.5 h-2.5 rounded-full bg-[#a4ac86]"></span></div><img src={project.image} alt={project.alt} class="rounded-b-md w-full"></div>
+			<article class="project-item grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+				<div class:list={['project-visual p-2 glass-card rounded-lg', project.imageOrder]}>
+					<div class="flex items-center justify-between border-b border-[#c6d58f]/15 p-2">
+						<div class="flex items-center space-x-1.5" aria-hidden="true"><span class="w-2.5 h-2.5 rounded-full bg-[#31533a]"></span><span class="w-2.5 h-2.5 rounded-full bg-[#8e9f8b]"></span><span class="w-2.5 h-2.5 rounded-full bg-[#e2ad72]"></span></div>
+					</div>
+					<img src={project.image} alt={project.alt} class="rounded-b-md w-full" loading="lazy">
+				</div>
 				<div class={project.contentOrder}>
-					<h3 class="text-3xl font-bold text-[#faf9f6]">{project.title}</h3>
-					<div class="flex items-center gap-4 my-3">
+					<h3 class="mt-2 text-3xl font-bold text-[#faf9f6]">{project.title}</h3>
+					<div class="mt-5 flex flex-wrap items-center gap-2" aria-label={`${project.title} technology stack`}>
 						{project.techs.map(([src, name]) => (
-							<img
-								src={src}
-								alt={`${name} icon`}
-								title={name}
-								class:list={[
-									'object-contain',
-									name === 'gRPC' ? 'h-6 w-auto' : name === 'Next.js' ? 'h-auto w-20' : 'h-6 w-6',
-								]}
-							/>
+							<span class="tech-pill">
+								<img src={src} alt="" aria-hidden="true" class="h-4 w-4 object-contain" loading="lazy" />
+								<span>{name}</span>
+							</span>
 						))}
 					</div>
-					<p class="body-copy !text-base">{project.copy}</p>
+					<p class="mt-5 body-copy !text-base">{project.copy}</p>
 					<div class="mt-6 flex items-center space-x-4"><a href={project.site} target="_blank" rel="noopener noreferrer" class="forest-button-primary"><span>Visit website</span></a><a href={project.code} target="_blank" rel="noopener noreferrer" class="forest-button-secondary"><span>Code</span></a></div>
 				</div>
 			</article>

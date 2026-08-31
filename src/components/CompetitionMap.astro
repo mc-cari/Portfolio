@@ -141,6 +141,12 @@ const stops = [
 	<div class="atlas-shell">
 		<div class="atlas-map-wrap">
 			<div id="competition-map" class="atlas-map" aria-label="Interactive globe showing Mauricio's in-person competition history"></div>
+			<div class="atlas-map-fallback" aria-hidden="true">
+				<div class="fallback-orbit fallback-orbit-one"></div>
+				<div class="fallback-orbit fallback-orbit-two"></div>
+				<div class="fallback-route"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+				<p><strong>07</strong> stops across <strong>03</strong> continents</p>
+			</div>
 			<div class="atlas-map-vignette" aria-hidden="true"></div>
 			<div class="atlas-map-status" data-map-status>
 				<span class="atlas-loader" aria-hidden="true"></span>
@@ -225,6 +231,7 @@ const stops = [
 		const token = atlas.dataset.mapboxToken || '';
 		const status = atlas.querySelector<HTMLElement>('[data-map-status]');
 		const mapElement = atlas.querySelector<HTMLElement>('#competition-map');
+		const mapWrap = atlas.querySelector<HTMLElement>('.atlas-map-wrap');
 		const stopButtons = [...atlas.querySelectorAll<HTMLButtonElement>('[data-stop-index]')];
 		const playButton = atlas.querySelector<HTMLButtonElement>('[data-map-play]');
 		const playLabel = atlas.querySelector<HTMLElement>('[data-map-play-label]');
@@ -364,7 +371,7 @@ const stops = [
 			if (!mapElement || map || !stops.length) return;
 			if (!token) {
 				status?.classList.add('error');
-				if (status) status.textContent = 'Add MAPBOX_TOKEN to .env to render the competition atlas.';
+				if (status) status.textContent = 'Interactive map unavailable here — use the timeline to explore each stop.';
 				return;
 			}
 			const { default: mapboxgl } = await import('mapbox-gl');
@@ -417,6 +424,7 @@ const stops = [
 			map.on('moveend', updateActiveMarkerZoom);
 
 			map.on('load', () => {
+				mapWrap?.classList.add('map-ready');
 				mapMarkerElements = stops.map((stop, index) => {
 					const marker = document.createElement('button');
 					marker.type = 'button';
@@ -531,6 +539,46 @@ const stops = [
 		inset: 0;
 		background: radial-gradient(circle at 52% 45%, #2d4a2b, #050b06 72%);
 	}
+
+	.atlas-map-fallback {
+		position: absolute;
+		inset: 0;
+		display: grid;
+		place-items: center;
+		overflow: hidden;
+		background:
+			radial-gradient(circle at 52% 44%, rgba(198, 213, 143, .12), transparent 13rem),
+			linear-gradient(rgba(198, 213, 143, .06) 1px, transparent 1px),
+			linear-gradient(90deg, rgba(198, 213, 143, .06) 1px, transparent 1px),
+			#071009;
+		background-size: auto, 4rem 4rem, 4rem 4rem, auto;
+		transition: opacity .45s ease, visibility .45s ease;
+	}
+
+	.atlas-map-wrap.map-ready .atlas-map-fallback {
+		opacity: 0;
+		visibility: hidden;
+		pointer-events: none;
+	}
+
+	.atlas-map-fallback p {
+		position: relative;
+		z-index: 1;
+		margin: 15rem 0 0;
+		color: #8e9f8b;
+		font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+		font-size: .7rem;
+		letter-spacing: .08em;
+		text-transform: uppercase;
+	}
+
+	.atlas-map-fallback strong { color: #c6d58f; font-size: 1rem; }
+	.fallback-orbit { position: absolute; border: 1px solid rgba(198, 213, 143, .15); border-radius: 50%; transform: rotate(-18deg); }
+	.fallback-orbit-one { width: 30rem; height: 16rem; }
+	.fallback-orbit-two { width: 23rem; height: 11rem; transform: rotate(28deg); }
+	.fallback-route { position: absolute; top: 43%; left: 20%; right: 20%; display: flex; justify-content: space-between; align-items: center; transform: rotate(-14deg); }
+	.fallback-route::before { content: ''; position: absolute; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(226, 173, 114, .65), transparent); }
+	.fallback-route span { position: relative; z-index: 1; width: .55rem; height: .55rem; border: 2px solid #c6d58f; border-radius: 50%; background: #071009; box-shadow: 0 0 0 .4rem rgba(198, 213, 143, .08); }
 
 	.atlas-map-vignette {
 		position: absolute;
@@ -737,7 +785,7 @@ const stops = [
 	}
 
 	:global(.competition-atlas .atlas-map-marker.departing .atlas-map-marker-card) {
-		transition: width .42s cubic-bezier(.22, 1, .36, 1), height .42s cubic-bezier(.22, 1, .36, 1), border-color .22s ease, box-shadow .22s ease;
+		transition: border-color .22s ease, box-shadow .22s ease;
 	}
 
 	:global(.competition-atlas .atlas-map-marker-card.dark) {
@@ -854,6 +902,9 @@ const stops = [
 		.competition-atlas { margin-top: 3rem; }
 		.atlas-map-wrap { min-height: 24rem; }
 		.atlas-story { padding: 1.5rem; }
+		.atlas-stops { min-width: 31rem; overflow-x: auto; padding-bottom: .55rem; scrollbar-color: rgba(198, 213, 143, .45) transparent; }
+		.atlas-stop { padding-inline: .35rem; }
+		.atlas-stop-name { max-width: 3.5rem; }
 		.atlas-play { right: .75rem; bottom: .75rem; }
 	}
 
