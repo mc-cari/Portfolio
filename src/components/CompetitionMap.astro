@@ -188,6 +188,9 @@ const stops = [
 				<p class="atlas-current-copy" data-detail-copy>Competitive-programming training camp at Universidad Austral de Chile.</p>
 			</div>
 
+		</aside>
+
+		<nav class="atlas-timeline" aria-label="Choose a competition stop">
 			<div class="atlas-stops">
 				{stops.map((stop, index) => (
 					<button
@@ -203,7 +206,7 @@ const stops = [
 				))}
 			</div>
 
-		</aside>
+		</nav>
 	</div>
 	<script is:inline type="application/json" data-map-stops set:html={JSON.stringify(stops)}></script>
 </div>
@@ -251,6 +254,9 @@ const stops = [
 		let activeIndex = 0;
 		let isPlaying = false;
 		let playbackSession = 0;
+		let mapReady = false;
+		let mapInView = false;
+		let journeyAutoStarted = false;
 
 		const setText = (selector: string, value: string) => {
 			const element = atlas.querySelector<HTMLElement>(selector);
@@ -366,6 +372,12 @@ const stops = [
 			}
 		};
 
+		const startJourneyWhenVisible = () => {
+			if (!mapReady || !mapInView || journeyAutoStarted || prefersReducedMotion) return;
+			journeyAutoStarted = true;
+			if (!isPlaying) void playJourney();
+		};
+
 		stopButtons.forEach((button) => {
 			button.addEventListener('click', () => {
 				stopJourney();
@@ -417,6 +429,11 @@ const stops = [
 			});
 			map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
 			map.addControl(new mapboxgl.AttributionControl({ compact: true }), 'bottom-left');
+			if (mapWrap) {
+				const resizeObserver = new ResizeObserver(() => map?.resize());
+				resizeObserver.observe(mapWrap);
+				map.on('remove', () => resizeObserver.disconnect());
+			}
 
 			map.on('style.load', () => {
 				map?.setFog({
@@ -431,6 +448,7 @@ const stops = [
 			map.on('moveend', updateActiveMarkerZoom);
 
 			map.on('load', () => {
+				map?.resize();
 				mapWrap?.classList.add('map-ready');
 				mapElement.querySelector<HTMLCanvasElement>('.mapboxgl-canvas')?.removeAttribute('tabindex');
 				mapMarkerElements = stops.map((stop, index) => {
@@ -466,6 +484,8 @@ const stops = [
 				showStop(activeIndex, false);
 				updateActiveMarkerZoom();
 				status?.classList.add('loaded');
+				mapReady = true;
+				startJourneyWhenVisible();
 			});
 
 			map.on('error', (event) => {
@@ -478,6 +498,13 @@ const stops = [
 		};
 
 		if ('IntersectionObserver' in window) {
+			const visibilityObserver = new IntersectionObserver((entries) => {
+				mapInView = entries.some((entry) => entry.isIntersecting && entry.intersectionRatio >= .35);
+				startJourneyWhenVisible();
+				if (journeyAutoStarted) visibilityObserver.disconnect();
+			}, { threshold: .35 });
+			visibilityObserver.observe(mapWrap ?? atlas);
+
 			const observer = new IntersectionObserver((entries) => {
 				if (entries.some((entry) => entry.isIntersecting)) {
 					initMap();
@@ -486,6 +513,7 @@ const stops = [
 			}, { rootMargin: '300px' });
 			observer.observe(atlas);
 		} else {
+			mapInView = true;
 			initMap();
 		}
 	}
@@ -533,7 +561,7 @@ const stops = [
 
 	.atlas-map-wrap {
 		position: relative;
-		min-height: 32rem;
+		min-height: clamp(18rem, 48svh, 26rem);
 		isolation: isolate;
 	}
 
@@ -681,19 +709,26 @@ const stops = [
 	.atlas-current-venue svg { width: .9rem; height: .9rem; flex: 0 0 auto; margin-top: .05rem; fill: none; stroke: #a4ac86; stroke-width: 1.7; }
 	.atlas-current-copy { min-height: 4.5rem; margin: .7rem 0 0; color: #7d8471; font-size: .84rem; line-height: 1.65; }
 
+	.atlas-timeline {
+		grid-column: 1 / -1;
+		overflow-x: auto;
+		padding: 1.25rem 1.5rem;
+		border-top: 1px solid rgba(164, 172, 134, .18);
+		scrollbar-color: rgba(198, 213, 143, .45) #0d1a0f;
+	}
+
 	.atlas-stops {
 		position: relative;
 		display: grid;
 		grid-template-columns: repeat(7, minmax(0, 1fr));
 		gap: 0;
-		margin: 2rem 0 0;
-		padding-top: 1.5rem;
+		min-width: 34rem;
 	}
 
 	.atlas-stops::before {
 		content: '';
 		position: absolute;
-		top: 1.76rem;
+		top: .275rem;
 		left: 8%;
 		right: 8%;
 		height: 1px;
@@ -706,6 +741,7 @@ const stops = [
 		flex-direction: column;
 		align-items: center;
 		min-width: 0;
+		min-height: 3.5rem;
 		padding: 0 .15rem;
 		border: 0;
 		background: transparent;
@@ -736,7 +772,7 @@ const stops = [
 
 	.atlas-stop:focus-visible { outline: 1px solid #a4ac86; outline-offset: .4rem; border-radius: .2rem; }
 	.atlas-stop-year { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .62rem; letter-spacing: .08em; }
-	.atlas-stop-name { max-width: 4rem; margin-top: .3rem; overflow: hidden; color: #7d8471; font-size: .63rem; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+	.atlas-stop-name { max-width: 100%; margin-top: .3rem; color: #a4ac86; font-size: .7rem; font-weight: 600; white-space: nowrap; }
 	.atlas-stop.active .atlas-stop-year, .atlas-stop.active .atlas-stop-name { color: #faf9f6; }
 
 	:global(.competition-atlas .atlas-map-marker) {
@@ -759,8 +795,15 @@ const stops = [
 		align-items: center;
 		transform: translateY(0);
 		transform-origin: center bottom;
-		transition: filter .22s ease;
+		transition: filter .22s ease, transform .22s ease, opacity .22s ease;
 	}
+
+	:global(.competition-atlas .atlas-map-marker:not(.active):not(:hover):not(:focus-visible) .atlas-map-marker-pin) {
+		transform: scale(.55);
+		opacity: .75;
+	}
+
+	:global(.competition-atlas .atlas-map-marker.active) { z-index: 2; }
 
 	:global(.competition-atlas .atlas-map-marker.active .atlas-map-marker-pin) {
 		transform: translateY(var(--marker-lift, 0px));
@@ -901,16 +944,27 @@ const stops = [
 
 	@container (max-width: 56rem) {
 		.atlas-heading { grid-template-columns: 1fr; gap: 1rem; }
-		.atlas-map-wrap { min-height: 27rem; }
+	}
+
+	@container (min-width: 56.01rem) {
+		.atlas-shell { grid-template-columns: minmax(0, 1.65fr) minmax(17rem, .9fr); }
+		.atlas-map-wrap { min-height: clamp(20rem, 49svh, 26rem); }
+		.atlas-story {
+			justify-content: center;
+			padding: clamp(1.25rem, 2vw, 2rem);
+			border-top: 0;
+			border-left: 1px solid rgba(164, 172, 134, .18);
+		}
+		.atlas-current-topline { margin-bottom: 1rem; }
+		.atlas-current h4 { min-height: 0; font-size: 1.2rem; }
+		.atlas-current-copy { min-height: 0; }
 	}
 
 	@media (max-width: 520px) {
 		.competition-atlas { margin-top: 3rem; }
-		.atlas-map-wrap { min-height: 24rem; }
+		.atlas-map-wrap { min-height: 18rem; }
 		.atlas-story { padding: 1.5rem; }
-		.atlas-stops { min-width: 31rem; overflow-x: auto; padding-bottom: .55rem; scrollbar-color: rgba(198, 213, 143, .45) transparent; }
 		.atlas-stop { padding-inline: .35rem; }
-		.atlas-stop-name { max-width: 3.5rem; }
 		.atlas-play { right: .75rem; bottom: .75rem; }
 	}
 
